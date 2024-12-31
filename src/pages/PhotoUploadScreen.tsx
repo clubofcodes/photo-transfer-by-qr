@@ -10,24 +10,25 @@ const PhotoUploadScreen: React.FC = () => {
   const sessionToken = searchParams.get("sessionToken");
 
   const [fileData, setFileData] = React.useState<File | null>(null);
+  const [uploadLoader, setUploadLoader] = React.useState<boolean>(false);
 
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setFileData(event?.target?.files?.[0] ?? null);
-    alert(`Hurray ${JSON.stringify(event?.target?.files?.[0]?.name)}`);
-    handleSubmit(event);
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setUploadLoader(true);
+
     const formData = new FormData();
     if (fileData) {
       formData.append("file", fileData);
     }
 
     try {
-      const res = await fetch(`http://172.20.10.9:8080/api/upload/`, {
+      const res = await fetch(`${GLOBAL_ENV.BACKEND_BASE_URL_API}upload/`, {
         method: "POST",
         body: formData,
         headers: {
@@ -37,16 +38,19 @@ const PhotoUploadScreen: React.FC = () => {
       const result = await res.json();
       if (res?.status === 201) {
         enqueueSnackbar(result?.message, { variant: "success" });
+        setFileData(null);
       } else {
         enqueueSnackbar(result?.message, { variant: "error" });
       }
     } catch (error: any) {
       enqueueSnackbar(
-        `Idhaar se ${error?.["message"] ?? "An unexpected error occurred"}`,
+        `Catch block: ${error?.["message"] ?? "An unexpected error occurred"}`,
         {
           variant: "error",
         }
       );
+    } finally {
+      setUploadLoader(false);
     }
   };
   return (
@@ -83,9 +87,46 @@ const PhotoUploadScreen: React.FC = () => {
       )}
       <button
         type="submit"
-        className="w-full text-white bg-theme hover:bg-theme/40 focus:ring-4 focus:outline-none focus:ring-theme/90 font-medium rounded-lg px-5 py-2.5 text-center dark:bg-theme dark:hover:bg-theme/40 dark:focus:ring-theme/20"
+        disabled={!fileData || uploadLoader}
+        className="relative w-full rounded-lg disabled:bg-gray-800 disabled:text-white/35 disabled:cursor-not-allowed bg-theme active:bg-theme/5 active:shadow-primary-2 hover:bg-black/75 text-white font-medium uppercase leading-normal px-6 py-3 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-theme/10"
       >
-        Upload
+        {uploadLoader && (
+          <div className="input-inline-icon-wrapper">
+            <svg
+              className="input-inline-svg-icon w-6 h-6 mt-1"
+              width="50"
+              height="50"
+              viewBox="0 0 50 50"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="25"
+                cy="25"
+                r="20"
+                stroke="#2563eb"
+                stroke-width="5"
+                fill="none"
+              />
+              <circle
+                cx="25"
+                cy="25"
+                r="20"
+                stroke="#000"
+                stroke-width="5"
+                stroke-dasharray="126.92"
+                stroke-dashoffset="63.46"
+              >
+                <animate
+                  attributeName="stroke-dashoffset"
+                  values="126.92;0"
+                  dur="2s"
+                  repeatCount="indefinite"
+                />
+              </circle>
+            </svg>
+          </div>
+        )}
+        <p>Upload</p>
       </button>
     </form>
   );

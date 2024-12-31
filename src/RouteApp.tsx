@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect } from "react";
 import QrCodeScreen from "./pages/QrCodeScreen";
 import LoginScreen from "./pages/LoginScreen";
 import { BrowserRouter, Route, Routes } from "react-router";
@@ -6,7 +6,7 @@ import DefaultLayout from "./layout/DefaultLayout";
 import LandingScreen from "./pages/LandingScreen";
 import PhotoUploadScreen from "./pages/PhotoUploadScreen";
 import { enqueueSnackbar, SnackbarProvider } from "notistack";
-import ProtectedRoute from "./routes/ProtectedRoute";
+// import ProtectedRoute from "./routes/ProtectedRoute";
 import { socket } from "./services/socket";
 
 const RouteApp: React.FC = () => {
@@ -16,7 +16,7 @@ const RouteApp: React.FC = () => {
       console.log(data); // Log the received message data to the console
       if (data?.file_name) {
         enqueueSnackbar(`${data.file_name} uploaded recently!`, {
-          variant: "warning",
+          variant: "info",
           autoHideDuration: 5000,
         });
       }

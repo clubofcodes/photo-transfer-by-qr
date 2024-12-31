@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Navigate, Outlet, useLocation } from "react-router";
+import { Navigate, Outlet } from "react-router";
 import { getAuthUser } from "../utils/auth";
 
 const ProtectedRoute: React.FC = () => {

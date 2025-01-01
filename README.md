@@ -20,6 +20,21 @@ cd proje-dir
 npm | pnpm install
 ```
 
+## Adding Variables to your Environment
+
+Loading your environment variables from a `.env` file is as easy as "ABC"!
+
+##### A. Create your `.env` file
+
+Create a `.env` file in the root of your project and insert
+your key/value pairs in the following format of `KEY=VALUE`:
+
+```sh
+VITE_BACKEND_DOMAIN_BASE_URL = http://localhost:8080/
+VITE_BACKEND_DOMAIN_BASE_URL_API = http://localhost:8080/api/
+VITE_FRONTEND_DOMAIN_BASE_URL = http://localhost:3575/
+```
+
 ## To run the project
 
 In the project directory, you can run:
